@@ -1,29 +1,27 @@
-# Computer Engineering Services Section
+# Computer Systems Publishing Engineering Services Section
 
-The Computer Engineering Services Section is Red Cup Engineering's section
-for computing, software, and digital infrastructure — the applied practice
-of building and operating computer systems, as distinct from the computer
-sciences that ground that practice.
+Groups the applications and release services that assemble publication content
+into complete web artifacts. Generic HTTP server, edge, platform, SSE, MCP, and
+build-projector contracts remain with their systems and networking owners.
 
-Its maintained knowledge (glossary terms and dated notes on topics such as
-context spacesuits, agentic-system messaging, MUD frameworks, and
-standardization) is organized under `content/`, while specialized computer
-engineering disciplines are developed as nested service sections under
-`services/`.
+- [VICTOR](apps/victor/README.md) — the Voxelized Information Catalog Topos Orienting Relations website server, serving through `@red-cup-engineering/http-server`.
+- [Hugo website services](services/hugo-website-services-section/) — the Hugo lineage.
+- [release candidates](services/web-release-candidate-service/README.md) and [static-site conformance](services/static-site-conformance-service/README.md) — publication release verification.
+- [artifact inventory serving](services/serve-http-artifact-inventory-service/README.md), [browser asset projection](services/project-browser-asset-tree-service/README.md), [asset transformation](services/transform-browser-asset-inventory-service/README.md), and [progressive web app projection](services/project-progressive-web-app-artifacts-service/README.md) — completed artifact construction and delivery.
+- [site administration reading](services/website-administration-reading-service/) — configured site administration and endpoint observations.
+- `src/audiobook-production.mjs` — the systems interpreter for a
+  `SoundScoreNarrationLayer`: provider-limit synthesis grouping, content-addressed
+  dispatch, cue rendering, ffmpeg normalization/mastering and M4B muxing, and
+  injected Whisper transcription proof. Pure score derivation and edition
+  records remain with ebook and voice-audio data owners.
 
-## Services
+Produce a configured title with:
 
-- `computer-code-engineering-services-section` — programming languages and code
-  development practice, including Elisp and JavaScript.
-- `computer-data-engineering-services-section` — data structures, types, models,
-  serialization, comparison, cryptography, and content.
-- `computer-networking-engineering-services-section` — networking protocols, including
-  HTTP and WebSocket.
-- `computer-systems-engineering-services-section` — computer systems
-  engineering at large: operating systems, interfaces, inference, games,
-  MUDs, proofing, blockchain, knowledge systems, the web, and agent computer
-  systems (harnesses, platforms, and multi-agent systems) — the section that
-  hosts GEODE, Horsetail, tsander, and the Claude/Codex harness-operations
-  machinery.
+```sh
+node scripts/produce-audiobook-edition.mjs /absolute/path/to/audiobook.json
+```
 
-- [Computer Information System Engineering](services/computer-information-system-engineering-services-section/README.md) — computerized natural-language standards and processing, with the existing Language → English → PTGAE source hierarchy. Natural-language science remains with Lenticule.
+The command writes the admitted specification, fabrication record, and
+automated proof named by the configuration. Live provider synthesis is not a
+repository check; `test/audiobook-production.test.mjs` uses a stub synthesizer
+while exercising real ffmpeg MP3 mastering and chapter-marked M4B muxing.
