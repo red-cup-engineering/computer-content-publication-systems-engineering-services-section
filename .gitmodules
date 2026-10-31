@@ -7,8 +7,8 @@
 	url = https://github.com/red-cup-engineering/website-administration-reading-service.git
 	branch = main
 [submodule "web-release-candidate-service"]
-	path = services/web-release-candidate-service
-	url = https://github.com/red-cup-engineering/web-release-candidate-service.git
+	path = services/web-release-candidate-computer-systems-publishing-engineering-services-section
+	url = https://github.com/red-cup-engineering/web-release-candidate-computer-systems-publishing-engineering-services-section.git
 	branch = main
 [submodule "static-site-conformance-service"]
 	path = services/static-site-conformance-service
