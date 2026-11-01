@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-/** Generate one declared book image through the house inference engine. */
+/** Generate one declared book image through the house image-authoring service. */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { buildProvenance, generateImageWithFallback } from "@red-cup-engineering/computer-inference-engine/image/image-generation";
+import { buildProvenance, generateImageWithFallback } from "@red-cup-engineering/image-authoring-service/image-generation";
 
 function visualStylePrompt(visualStyle) {
   if (visualStyle === undefined) return "";
