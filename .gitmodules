@@ -15,6 +15,6 @@
 	url = https://github.com/red-cup-engineering/static-site-conformance-service.git
 	branch = main
 [submodule "project-browser-asset-tree-service"]
-	path = services/project-browser-asset-tree-service
-	url = https://github.com/red-cup-engineering/project-browser-asset-tree-service.git
+	path = services/project-browser-asset-tree-computer-systems-publishing-engineering-services-section
+	url = https://github.com/red-cup-engineering/project-browser-asset-tree-computer-systems-publishing-engineering-services-section.git
 	branch = main
