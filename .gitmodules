@@ -3,8 +3,8 @@
 	url = https://github.com/red-cup-engineering/news-property.git
 	branch = main
 [submodule "website-administration-reading-service"]
-	path = services/website-administration-reading-service
-	url = https://github.com/red-cup-engineering/website-administration-reading-service.git
+	path = services/website-administration-reading-computer-systems-publishing-engineering-services-section
+	url = https://github.com/red-cup-engineering/website-administration-reading-computer-systems-publishing-engineering-services-section.git
 	branch = main
 [submodule "web-release-candidate-service"]
 	path = services/web-release-candidate-computer-systems-publishing-engineering-services-section
