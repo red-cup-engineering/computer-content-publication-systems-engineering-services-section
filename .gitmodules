@@ -1,20 +1,20 @@
-[submodule "news-property"]
+[submodule "apps/news-property"]
 	path = apps/news-property
 	url = https://github.com/red-cup-engineering/news-property.git
 	branch = main
-[submodule "website-administration-reading-service"]
+[submodule "services/website-administration-reading-computer-systems-publishing-engineering-services-section"]
 	path = services/website-administration-reading-computer-systems-publishing-engineering-services-section
 	url = https://github.com/red-cup-engineering/website-administration-reading-computer-systems-publishing-engineering-services-section.git
 	branch = main
-[submodule "web-release-candidate-service"]
+[submodule "services/web-release-candidate-computer-systems-publishing-engineering-services-section"]
 	path = services/web-release-candidate-computer-systems-publishing-engineering-services-section
 	url = https://github.com/red-cup-engineering/web-release-candidate-computer-systems-publishing-engineering-services-section.git
 	branch = main
-[submodule "static-site-conformance-service"]
+[submodule "services/static-site-conformance-computer-systems-publishing-engineering-services-section"]
 	path = services/static-site-conformance-computer-systems-publishing-engineering-services-section
 	url = https://github.com/red-cup-engineering/static-site-conformance-computer-systems-publishing-engineering-services-section.git
 	branch = main
-[submodule "project-browser-asset-tree-service"]
+[submodule "services/project-browser-asset-tree-computer-systems-publishing-engineering-services-section"]
 	path = services/project-browser-asset-tree-computer-systems-publishing-engineering-services-section
 	url = https://github.com/red-cup-engineering/project-browser-asset-tree-computer-systems-publishing-engineering-services-section.git
 	branch = main
