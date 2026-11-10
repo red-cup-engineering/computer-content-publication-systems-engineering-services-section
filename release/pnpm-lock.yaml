@@ -41,6 +41,9 @@ importers:
       '@red-cup-engineering/http-services-section':
         specifier: 0.6.2
         version: 0.6.2
+      '@red-cup-engineering/image-authoring-service':
+        specifier: git+https://github.com/red-cup-engineering/image-authoring-service.git#ece3490e22ef6c4cec779b13f953945314188307
+        version: git+https://github.com/red-cup-engineering/image-authoring-service.git#ece3490e22ef6c4cec779b13f953945314188307(@types/node@26.6.5)
       '@red-cup-engineering/immutable-content-custody-service':
         specifier: 0.4.1
         version: 0.4.1
@@ -1217,6 +1220,11 @@ packages:
   '@red-cup-engineering/http-services-section@0.6.2':
     resolution: {integrity: sha512-qH00Ov8tCggt3TxtUPH2+C8iDwYOLoaRSh3WtJiPiT4g0+GykoUBg5OT36YUPvR+sGIGwXJjx0FkuvjKuQADLQ==}
     engines: {node: '>=22.18'}
+
+  '@red-cup-engineering/image-authoring-service@git+https://github.com/red-cup-engineering/image-authoring-service.git#ece3490e22ef6c4cec779b13f953945314188307':
+    resolution: {commit: ece3490e22ef6c4cec779b13f953945314188307, repo: https://github.com/red-cup-engineering/image-authoring-service.git, type: git}
+    version: 0.1.0
+    engines: {node: '>=22'}
 
   '@red-cup-engineering/immutable-content-custody-service@0.4.1':
     resolution: {integrity: sha512-EDg3ItnELTtNRRvcgkazQej7azbFFuj4jS2H2Vgsaa1u1+JN+jYN9iRpJU0SQz1GmhxeoMSpW9/HTL8D8+XUaA==}
@@ -5855,6 +5863,12 @@ snapshots:
       '@red-cup-engineering/signchain': 0.1.0
       '@red-cup-engineering/turtle-services-section': 0.1.2
       '@red-cup-engineering/uri-services-section': 0.1.1
+
+  '@red-cup-engineering/image-authoring-service@git+https://github.com/red-cup-engineering/image-authoring-service.git#ece3490e22ef6c4cec779b13f953945314188307(@types/node@26.6.5)':
+    dependencies:
+      sharp: 0.35.5(@types/node@26.6.5)
+    transitivePeerDependencies:
+      - '@types/node'
 
   '@red-cup-engineering/immutable-content-custody-service@0.4.1':
     dependencies:

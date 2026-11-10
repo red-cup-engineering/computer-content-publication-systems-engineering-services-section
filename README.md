@@ -1,4 +1,4 @@
-# @red-cup-engineering/computer-systems-publishing-engineering-services-section
+# Computer Content Publication Systems Engineering
 
 <!-- 561-group-standards:badges:start -->
 [![Red Cup Engineering](https://img.shields.io/badge/561%20Group-Red%20Cup%20Engineering-c0392b)](https://github.com/red-cup-engineering)
@@ -7,17 +7,17 @@
 [![Tips welcome](https://img.shields.io/badge/tips-welcome-d4a017)](https://github.com/561-group/.github/blob/main/TIPS.md)
 <!-- 561-group-standards:badges:end -->
 
-Systems that render and assemble publication content into audiobook, browser, progressive-web-app, and HTTP artifacts.
+This section renders and assembles publication content into audiobook, browser, progressive-web-app, and HTTP artifacts. Install its published package as `@red-cup-engineering/computer-systems-publishing-engineering-services-section`.
 
 Groups the applications and release services that assemble publication content
 into complete web artifacts. Generic HTTP server, edge, platform, SSE, MCP, and
 build-projector contracts remain with their systems and networking owners.
 
-- [VICTOR](apps/victor/README.md) — the Voxelized Information Catalog Topos Orienting Relations website server, serving through `@red-cup-engineering/computer-web-server`.
-- [Hugo website services](services/hugo-website-services-section/) — the Hugo lineage.
-- [release candidates](services/web-release-candidate-service/README.md) and [static-site conformance](services/static-site-conformance-service/README.md) — publication release verification.
-- [artifact inventory serving](services/serve-http-artifact-inventory-service/README.md), [browser asset projection](services/project-browser-asset-tree-service/README.md), [asset transformation](services/transform-browser-asset-inventory-service/README.md), and [progressive web app projection](services/project-progressive-web-app-artifacts-service/README.md) — completed artifact construction and delivery.
-- [site administration reading](services/website-administration-reading-service/) — configured site administration and endpoint observations.
+- [VICTOR](https://github.com/red-cup-engineering/static-site-publisher) — the Voxelized Information Catalog Topos Orienting Relations website server, serving through `@red-cup-engineering/computer-web-server`.
+- [News Property](apps/news-property) owns the news publication application.
+- [release candidates](services/web-release-candidate-computer-systems-publishing-engineering-services-section/README.md) and [static-site conformance](services/static-site-conformance-computer-systems-publishing-engineering-services-section/README.md) — publication release verification.
+- [artifact inventory serving](scripts/serve-http-artifact-inventory.mjs), [browser asset projection](services/project-browser-asset-tree-computer-systems-publishing-engineering-services-section/README.md), [asset transformation](scripts/transform-browser-asset-inventory.mjs), and [progressive web app projection](scripts/project-progressive-web-app-artifacts.mjs) — completed artifact construction and delivery.
+- [site administration reading](services/website-administration-reading-computer-systems-publishing-engineering-services-section/) — configured site administration and endpoint observations.
 - `src/audiobook-production.mjs` — the systems interpreter for a
   `SoundScoreNarrationLayer`: provider-limit synthesis grouping, content-addressed
   dispatch, cue rendering, ffmpeg normalization/mastering and M4B muxing, and
