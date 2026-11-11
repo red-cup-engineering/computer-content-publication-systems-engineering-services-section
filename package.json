@@ -1,6 +1,6 @@
 {
   "name": "@red-cup-engineering/computer-systems-publishing-engineering-services-section",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Systems that render and assemble publication content into audiobook, browser, progressive-web-app, and HTTP artifacts.",
   "type": "module",
   "keywords": [
@@ -42,7 +42,7 @@
     "@red-cup-engineering/computer-triplet-serialized-content-engineering-services-section": "0.1.1",
     "@red-cup-engineering/web-theming-service": "0.0.6",
     "@red-cup-engineering/computer-inference-engine": "0.1.2",
-    "@red-cup-engineering/image-authoring-service": "git+https://github.com/red-cup-engineering/image-authoring-service.git#ece3490e22ef6c4cec779b13f953945314188307",
+    "@red-cup-engineering/image-authoring-service": "^0.2.1",
     "@red-cup-engineering/computer-systems-fabrication-engineering-services-section": "0.3.2",
     "@red-cup-engineering/read-markdown-frontmatter-service": "0.2.0",
     "sharp": "0.35.5"
