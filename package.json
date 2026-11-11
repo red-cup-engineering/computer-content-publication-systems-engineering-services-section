@@ -34,7 +34,7 @@
     "@red-cup-engineering/computer-data-engineering-services-section": "0.2.0",
     "@red-cup-engineering/ebook-engineering-services-section": "0.4.1",
     "@red-cup-engineering/voice-audio-services-section": "0.1.1",
-    "@red-cup-engineering/http-services-section": "0.6.2",
+    "@red-cup-engineering/http-engineering-services-section": "^0.6.5-dev.2",
     "@red-cup-engineering/immutable-content-custody-service": "0.4.1",
     "@red-cup-engineering/html-engineering-services-section": "0.1.2",
     "@red-cup-engineering/javascript-computer": "0.3.4",

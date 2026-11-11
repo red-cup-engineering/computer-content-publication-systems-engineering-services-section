@@ -1,5 +1,5 @@
 import { extensionType } from "@red-cup-engineering/computer-serialized-content-engineering-services-section/services/http-data-services-section/src/media-type";
-import { strongEtag } from "@red-cup-engineering/http-services-section/response";
+import { strongEtag } from "@red-cup-engineering/http-engineering-services-section/response";
 
 const DEFAULT_INDEX = Object.freeze(["index.html"]);
 const DEFAULT_CACHE_CONTROL = "public, max-age=0, must-revalidate";

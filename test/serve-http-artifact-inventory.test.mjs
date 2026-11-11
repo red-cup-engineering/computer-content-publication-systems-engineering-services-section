@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { gunzipSync } from "node:zlib";
-import { send } from "@red-cup-engineering/http-services-section/response";
+import { send } from "@red-cup-engineering/http-engineering-services-section/response";
 import { artifactInventory } from "../scripts/serve-http-artifact-inventory.mjs";
 
 function handler(inventory, options) {
