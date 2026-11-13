@@ -4,7 +4,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 import { parseManifest, listChapters, collectReferences, resolveStyle, sha256SourceHash } from "@red-cup-engineering/ebook-engineering-services-section";
 import { produceEbook } from "../scripts/produce-ebook.mjs";
 import { produceSetOfEbooks } from "../scripts/produce-set-of-ebooks.mjs";

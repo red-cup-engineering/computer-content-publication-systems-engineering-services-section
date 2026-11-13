@@ -4,7 +4,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { acceptAudiobookEdition, audiobookEditionSpecification } from "@red-cup-engineering/voice-audio-services-section";
+import { acceptAudiobookEdition, audiobookEditionSpecification } from "@red-cup-engineering/voice-audio-engineering-services-section";
 import { automatedListeningProof, fabricateAudiobookEdition } from "../src/audiobook-production.mjs";
 
 function toneWav(seconds = 1.2, sampleRate = 44100) {

@@ -3,7 +3,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { buildProvenance, generateImageWithFallback } from "@red-cup-engineering/image-authoring-service/image-generation";
+import { buildProvenance, generateImageWithFallback } from "@red-cup-engineering/image-authoring-computer-inference-system-engineering-services-section/image-generation";
 
 function visualStylePrompt(visualStyle) {
   if (visualStyle === undefined) return "";

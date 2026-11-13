@@ -7,7 +7,7 @@
 [![Tips welcome](https://img.shields.io/badge/tips-welcome-d4a017)](https://github.com/561-group/.github/blob/main/TIPS.md)
 <!-- 561-group-standards:badges:end -->
 
-This section renders and assembles publication content into audiobook, browser, progressive-web-app, and HTTP artifacts. Install its published package as `@red-cup-engineering/computer-systems-publishing-engineering-services-section`.
+This section renders and assembles publication content into audiobook, browser, progressive-web-app, and HTTP artifacts. Install its published package as `@red-cup-engineering/computer-content-publication-systems-engineering-services-section`.
 
 Groups the applications and release services that assemble publication content
 into complete web artifacts. Generic HTTP server, edge, platform, SSE, MCP, and

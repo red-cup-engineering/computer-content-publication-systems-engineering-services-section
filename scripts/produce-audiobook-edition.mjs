@@ -3,8 +3,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { listChapters } from "@red-cup-engineering/ebook-engineering-services-section";
 import { deriveSoundScoreNarrationLayer } from "@red-cup-engineering/ebook-engineering-services-section/narration-script";
-import { scoreFromNarrationLayer } from "@red-cup-engineering/voice-audio-services-section/audioplay-model";
-import { audiobookEditionSpecification } from "@red-cup-engineering/voice-audio-services-section";
+import { scoreFromNarrationLayer } from "@red-cup-engineering/voice-audio-engineering-services-section/audioplay-model";
+import { audiobookEditionSpecification } from "@red-cup-engineering/voice-audio-engineering-services-section";
 import { automatedListeningProof, fabricateAudiobookEdition } from "../src/audiobook-production.mjs";
 
 export async function produceAudiobookEdition(configPath) {

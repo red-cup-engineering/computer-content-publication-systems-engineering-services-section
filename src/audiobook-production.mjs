@@ -1,13 +1,13 @@
-import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
-import { canonicalJson } from "@red-cup-engineering/json-services-section/canonical-json";
-import { parseJsonValue } from "@red-cup-engineering/json-services-section/parse-json-value";
+import { makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
+import { canonicalJson } from "@red-cup-engineering/json-engineering-services-section/canonical-json";
+import { parseJsonValue } from "@red-cup-engineering/json-engineering-services-section/parse-json-value";
 import { createFileStore } from "@red-cup-engineering/immutable-content-custody-service/file-store";
 import { createImmutableContentCustody } from "@red-cup-engineering/immutable-content-custody-service";
 import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { admitArtifactFabricationRealizationPlan, admitArtifactFabricationSpecification } from "@red-cup-engineering/computer-data-engineering-services-section/artifact-fabrication";
-import { audiobookMasteringSpecification, describeAudiobookEditionSource, wordErrorRate } from "@red-cup-engineering/voice-audio-services-section";
+import { audiobookMasteringSpecification, describeAudiobookEditionSource, wordErrorRate } from "@red-cup-engineering/voice-audio-engineering-services-section";
 
 const ni = makeNiUri;
 const semanticId = (value) => ni(Buffer.from(JSON.stringify(value)));
