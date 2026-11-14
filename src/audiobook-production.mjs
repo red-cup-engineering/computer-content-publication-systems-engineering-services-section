@@ -1,6 +1,6 @@
 import { makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
-import { canonicalJson } from "@red-cup-engineering/json-engineering-services-section/canonical-json";
-import { parseJsonValue } from "@red-cup-engineering/json-engineering-services-section/parse-json-value";
+import { canonicalJson } from "@red-cup-engineering/json-engine/canonical-json";
+import { parseJsonValue } from "@red-cup-engineering/json-engine/parse-json-value";
 import { createFileStore } from "@red-cup-engineering/immutable-content-custody-service/file-store";
 import { createImmutableContentCustody } from "@red-cup-engineering/immutable-content-custody-service";
 import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
