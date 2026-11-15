@@ -46,9 +46,6 @@
     "@red-cup-engineering/markdown-engineering-services-section": "^0.5.7",
     "sharp": "0.35.5"
   },
-  "scripts": {
-    "test": "node --test test/*.test.mjs"
-  },
   "bin": {
     "generate-book-illustration": "scripts/generate-book-illustration.mjs",
     "ebook-production-cli": "apps/ebook-production-cli.mjs",
