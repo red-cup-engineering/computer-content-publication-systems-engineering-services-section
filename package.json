@@ -43,7 +43,7 @@
     "@red-cup-engineering/web-theming-service": "^0.0.10",
     "@red-cup-engineering/computer-inference-engine": "^0.2.13",
     "@red-cup-engineering/image-authoring-computer-inference-system-engineering-services-section": "^0.2.1",
-    "@red-cup-engineering/computer-systems-fabrication-life-cycle-engineering-services-section": "^0.3.2",
+    "@red-cup-engineering/computer-systems-fabrication-life-cycle-engineering-services-section": "^0.6.0",
     "@red-cup-engineering/markdown-engineering-services-section": "^0.5.7",
     "sharp": "0.35.5"
   },
