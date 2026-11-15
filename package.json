@@ -1,6 +1,6 @@
 {
   "name": "@red-cup-engineering/computer-content-publication-systems-engineering-services-section",
-  "version": "0.2.2-dev.0",
+  "version": "0.2.3-dev.0",
   "description": "Systems that render and assemble publication content into audiobook, browser, progressive-web-app, and HTTP artifacts.",
   "type": "module",
   "keywords": [
