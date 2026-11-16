@@ -76,7 +76,9 @@ export function transformBrowserAssetInventory({ artifacts, config = {} } = {}) 
   }
   for (const item of [...mapping.values()].sort((left, right) => compareText(left.path, right.path))) {
     const source = inventory.get(item.source);
-    output.set(item.path, freezeRecord({ ...source, body: item.body, cacheControl: IMMUTABLE,
+    output.set(item.path, freezeRecord({ ...source, body: item.body,
+      // A fingerprint stabilizes bytes, not the owner's caching policy.
+      cacheControl: source.cacheControl === undefined ? IMMUTABLE : source.cacheControl,
       provenance: Object.freeze({ transformer: 'browser-asset-inventory', source: item.source, integrity: item.integrity,
         ...(source.provenance === undefined ? {} : { input: source.provenance }) }) }));
   }

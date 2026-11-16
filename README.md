@@ -49,3 +49,15 @@ Production requires Pandoc, XeLaTeX, Fontconfig, Poppler, zip and unzip on the
 selected host. Fabrication produces bytes; it does not assert editorial
 acceptance or retail publication. Keep manuscript, metadata, cover adoption,
 rights and token provenance with the content owner.
+
+## Fingerprinted asset cache policy
+
+Fingerprinting and integrity attributes describe final bytes, not permission
+to serve or cache them. The original release owner admits the inventory.
+A selected asset without an explicit cache policy receives the normal public
+immutable default; any explicit policy is retained, including no-store,
+bounded lifetimes, and the inventory's false/no-header setting. The inventory
+resource passes that metadata into its response representation. Run
+`npm run test:asset-policy` from source or the complete unpacked package
+with its original runtime dependencies to qualify the policy and CSS revision
+receiving through the shipped APIs.

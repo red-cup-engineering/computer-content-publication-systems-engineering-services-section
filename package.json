@@ -51,12 +51,14 @@
     "ebook-production-cli": "apps/ebook-production-cli.mjs",
     "fabricate-ebook-from-corpus": "apps/fabricate-ebook-from-corpus.mjs"
   },
+  "scripts": { "test:asset-policy": "node --test test/browser-asset-policy.test.mjs" },
   "private": false,
   "files": [
     "package.json",
     "README*",
     "LICENSE*",
     "scripts",
+    "test/browser-asset-policy.test.mjs",
     "src",
     "apps",
     "!apps/news-property/**",
