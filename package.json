@@ -3,9 +3,6 @@
   "version": "0.2.4-dev.0",
   "description": "Systems that render and assemble publication content into audiobook, browser, progressive-web-app, and HTTP artifacts.",
   "type": "module",
-  "keywords": [
-    "engineering"
-  ],
   "exports": {
     "./audiobook-production": "./src/audiobook-production.mjs",
     "./scripts/produce-audiobook-edition.mjs": "./scripts/produce-audiobook-edition.mjs",
@@ -21,8 +18,7 @@
     "./scripts/issue-ebook-edition.mjs": "./scripts/issue-ebook-edition.mjs",
     "./scripts/carry-editions-forward.mjs": "./scripts/carry-editions-forward.mjs",
     "./scripts/carry-ebook-proof.mjs": "./scripts/carry-ebook-proof.mjs",
-    "./scripts/verify-ebook-edition.mjs": "./scripts/verify-ebook-edition.mjs",
-    "./frozen-lockfile": "./release/pnpm-lock.yaml"
+    "./scripts/verify-ebook-edition.mjs": "./scripts/verify-ebook-edition.mjs"
   },
   "dependencies": {
     "@red-cup-engineering/computer-serialized-content-engineering-services-section": "^0.6.2",
@@ -50,7 +46,6 @@
     "ebook-production-cli": "apps/ebook-production-cli.mjs",
     "fabricate-ebook-from-corpus": "apps/fabricate-ebook-from-corpus.mjs"
   },
-  "private": false,
   "files": [
     "package.json",
     "README*",
@@ -58,20 +53,11 @@
     "scripts",
     "src",
     "apps",
-    "!apps/news-property/**",
-    "release"
+    "!apps/news-property/**"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/red-cup-engineering/computer-content-publication-systems-engineering-services-section.git"
   },
-  "packageManager": "pnpm@11.28.5",
-  "registryConsumption": {
-    "frozenLockfile": "./release/pnpm-lock.yaml"
-  },
-  "license": "MIT",
-  "funding": {
-    "type": "individual",
-    "url": "https://github.com/561-group/.github/blob/main/TIPS.md"
-  }
+  "license": "MIT"
 }
