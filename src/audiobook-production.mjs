@@ -6,7 +6,7 @@ import { createImmutableContentCustody } from "@red-cup-engineering/immutable-co
 import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
-import { admitArtifactFabricationRealizationPlan, admitArtifactFabricationSpecification } from "@red-cup-engineering/computer-data-engineering-services-section/artifact-fabrication";
+import { validateArtifactFabricationRealizationPlan, validateArtifactFabricationSpecification } from "@red-cup-engineering/computer-data-engineering-services-section/artifact-fabrication";
 import { audiobookMasteringSpecification, describeAudiobookEditionSource, wordErrorRate } from "@red-cup-engineering/voice-audio-engineering-services-section";
 
 const ni = makeNiUri;
@@ -98,11 +98,11 @@ function synthesisRequest(group, layer, source) {
 export async function fabricateAudiobookEdition(specificationCandidate, source, { synthesizeSpeech, ffmpeg = command, maximumSynthesisCharacters = 3000 } = {}) {
   if (typeof synthesizeSpeech !== "function") throw new TypeError("synthesizeSpeech capability is required");
   const layer = source.narrationLayer ?? source.narrationScript;
-  const specification = specificationCandidate?.type === "ArtifactFabricationSpecification" ? specificationCandidate : admitArtifactFabricationSpecification(specificationCandidate);
+  const specification = specificationCandidate?.type === "ArtifactFabricationSpecification" ? specificationCandidate : validateArtifactFabricationSpecification(specificationCandidate);
   if (specification.type === "ArtifactFabricationSpecificationRefusal") return specification;
   const described = describeAudiobookEditionSource(source);
   if (specification.projections.some((projection) => projection.configuration?.editionInputDigest !== described.editionInputDigest)) return Object.freeze({ type: "AudiobookEditionFabricationResult", version: 1, status: "refused", code: "EDITION_INPUT_DIGEST_MISMATCH" });
-  const plan = admitArtifactFabricationRealizationPlan(specification, { type: "ArtifactFabricationRealizationPlanCandidate", version: 1, artifactId: specification.artifact.id, specificationDigest: specification.specificationDigest, projectionIds: specification.projections.map(({ id }) => id), acceptanceObligationIds: specification.acceptanceObligations.map(({ id }) => id) });
+  const plan = validateArtifactFabricationRealizationPlan(specification, { type: "ArtifactFabricationRealizationPlanCandidate", version: 1, artifactId: specification.artifact.id, specificationDigest: specification.specificationDigest, projectionIds: specification.projections.map(({ id }) => id), acceptanceObligationIds: specification.acceptanceObligations.map(({ id }) => id) });
   if (plan.type === "ArtifactFabricationRealizationPlanRefusal") return plan;
   const out = resolve(source.distDir); mkdirSync(out, { recursive: true });
   const work = join(out, ".audiobook-work"); mkdirSync(work, { recursive: true });
