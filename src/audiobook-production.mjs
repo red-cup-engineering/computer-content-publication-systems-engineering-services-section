@@ -112,8 +112,8 @@ export async function fabricateAudiobookEdition(specificationCandidate, source, 
     return path;
   };
   const store = createFileStore(join(work, "content"));
-  const storage = createImmutableContentCustody({ store, maximumBytes: 64 * 1024 * 1024 });
-  const origin = new Map(), chapterArtifacts = [], segmentEvidence = [];
+  const custody = createImmutableContentCustody({ store, maximumBytes: 64 * 1024 * 1024 });
+  const provenance = new Map(), chapterArtifacts = [], segmentEvidence = [];
   for (const chapter of layer.chapters) {
     const parts = [];
     for (const group of groupNarrationForSynthesis(chapter.events, maximumSynthesisCharacters)) {
@@ -125,26 +125,26 @@ export async function fabricateAudiobookEdition(specificationCandidate, source, 
       const contentDigest = semanticId(request);
       const input = { type: "AudiobookSynthesisInput", version: 1, request, synthesizer: source.synthesizer.provenanceDigest, normalization: { sampleRate: audiobookMasteringSpecification.sampleRate, channels: audiobookMasteringSpecification.channels, codec: "pcm_s16le" } };
       const inputDigest = ni(Buffer.from(canonicalJson(input)));
-      const token = inputDigest.split(";").at(-1), recordKey = `synthesis/${token}.json`;
-      const storedRecord = await store.get(recordKey);
-      let record = storedRecord ? parseJsonValue(Buffer.from(storedRecord.body).toString("utf8")) : null;
-      if (record && (record.type !== "AudiobookSynthesisReceipt" || record.version !== 1 || record.inputDigest !== inputDigest)) throw new Error("synthesis receipt does not bind this input");
-      let kept = record ? await storage.get(record.audio) : null;
+      const token = inputDigest.split(";").at(-1), receiptKey = `synthesis/${token}.json`;
+      const storedReceipt = await store.get(receiptKey);
+      let receipt = storedReceipt ? parseJsonValue(Buffer.from(storedReceipt.body).toString("utf8")) : null;
+      if (receipt && (receipt.type !== "AudiobookSynthesisReceipt" || receipt.version !== 1 || receipt.inputDigest !== inputDigest)) throw new Error("synthesis receipt does not bind this input");
+      let retained = receipt ? await custody.get(receipt.audio) : null;
       const normalized = join(work, `${token}-44100.wav`);
-      if (!kept) {
+      if (!retained) {
         const made = await synthesizeSpeech(request);
         if (!made?.bytes || !made?.provenance) throw new Error("synthesizeSpeech must return bytes and provenance");
         const raw = join(work, `${token}.wav`);
         writeFileSync(raw, Buffer.from(made.bytes));
         ffmpeg("ffmpeg", ["-y", "-v", "error", "-i", raw, "-ar", String(audiobookMasteringSpecification.sampleRate), "-ac", String(audiobookMasteringSpecification.channels), "-c:a", "pcm_s16le", normalized]);
         const bytes = readFileSync(normalized);
-        const audio = await storage.put({ ni: ni(bytes), bytes, mediaType: "audio/wav" });
-        record = { type: "AudiobookSynthesisReceipt", version: 1, inputDigest, audio, provenance: made.provenance };
-        await store.putCurrent(recordKey, { body: Buffer.from(canonicalJson(record)), mediaType: "application/json" });
-      } else writeFileSync(normalized, kept.bytes);
-      origin.set(ni(Buffer.from(canonicalJson(record.provenance))), record.provenance);
+        const audio = await custody.put({ ni: ni(bytes), bytes, mediaType: "audio/wav" });
+        receipt = { type: "AudiobookSynthesisReceipt", version: 1, inputDigest, audio, provenance: made.provenance };
+        await store.putCurrent(receiptKey, { body: Buffer.from(canonicalJson(receipt)), mediaType: "application/json" });
+      } else writeFileSync(normalized, retained.bytes);
+      provenance.set(ni(Buffer.from(canonicalJson(receipt.provenance))), receipt.provenance);
       parts.push(normalized);
-      segmentEvidence.push({ id: group.unitIds.join("+"), unitIds: group.unitIds, chapter: chapter.index, contentDigest, synthesisInputDigest: inputDigest, audio: record.audio, text: group.text, path: normalized, durationSeconds: duration(normalized) });
+      segmentEvidence.push({ id: group.unitIds.join("+"), unitIds: group.unitIds, chapter: chapter.index, contentDigest, synthesisInputDigest: inputDigest, audio: receipt.audio, text: group.text, path: normalized, durationSeconds: duration(normalized) });
     }
     const concat = join(work, `${String(chapter.index).padStart(2, "0")}.concat.txt`); concatFile(concat, parts);
     const path = join(out, `${String(chapter.index).padStart(2, "0")}-${layer.slug}.mp3`);
@@ -158,7 +158,7 @@ export async function fabricateAudiobookEdition(specificationCandidate, source, 
   writeFileSync(metadata, `;FFMETADATA1\ntitle=${escapeMetadata(layer.title)}\nartist=${escapeMetadata(layer.author)}\ncomment=${escapeMetadata(layer.disclosure)}\n${chapters.map((chapter) => `[CHAPTER]\nTIMEBASE=1/1000\nSTART=${chapter.startMs}\nEND=${chapter.endMs}\ntitle=${escapeMetadata(chapter.title)}\n`).join("")}`);
   const m4b = join(out, `${layer.slug}.m4b`);
   ffmpeg("ffmpeg", ["-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", chapterList, "-i", resolve(source.coverPath), "-f", "ffmetadata", "-i", metadata, "-map", "0:a", "-map", "1:v", "-map_metadata", "2", "-map_chapters", "2", "-c:a", "aac", "-b:a", "192k", "-c:v", "mjpeg", "-disposition:v", "attached_pic", "-movflags", "+faststart", m4b]);
-  return Object.freeze({ type: "AudiobookEditionFabricationResult", version: 1, status: "fabricated-awaiting-acceptance", specification, plan, artifacts: Object.freeze({ chapterMp3s: chapters, m4b: { ...fileEvidence(m4b), durationSeconds: duration(m4b) } }), segments: Object.freeze(segmentEvidence), synthesizerProvenance: Object.freeze([...origin].map(([digest, value]) => ({ digest, value }))), formatEvidence: Object.freeze({ mastering: audiobookMasteringSpecification, scoreCues: layer.chapters.map(({ index, events }) => ({ chapter: index, cues: events.filter(({ type }) => type === "cue") })), disclosure: layer.disclosure }), pendingAcceptanceObligationIds: ["independent-listening-proof"] });
+  return Object.freeze({ type: "AudiobookEditionFabricationResult", version: 1, status: "fabricated-awaiting-acceptance", specification, plan, artifacts: Object.freeze({ chapterMp3s: chapters, m4b: { ...fileEvidence(m4b), durationSeconds: duration(m4b) } }), segments: Object.freeze(segmentEvidence), synthesizerProvenance: Object.freeze([...provenance].map(([digest, value]) => ({ digest, value }))), formatEvidence: Object.freeze({ mastering: audiobookMasteringSpecification, scoreCues: layer.chapters.map(({ index, events }) => ({ chapter: index, cues: events.filter(({ type }) => type === "cue") })), disclosure: layer.disclosure }), pendingAcceptanceObligationIds: ["independent-listening-proof"] });
 }
 
 /** First-pass proof using an injected transcribeMedia-compatible systems capability. */

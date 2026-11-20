@@ -14,7 +14,7 @@ const usage = "usage: carry-editions-forward.mjs [--records-dir <dir>] [--catalo
 
 function read(path) { return JSON.parse(readFileSync(resolve(path), "utf8")); }
 function write(path, value) { mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`); }
-function rejection(book, code) { return { book: book.slug, status: "refused", code }; }
+function refusal(book, code) { return { book: book.slug, status: "refused", code }; }
 
 function discoverTriples(dir, bookRoot) {
   const files = readdirSync(resolve(dir)).filter((file) => file.endsWith("-acceptance.json"));
@@ -52,13 +52,13 @@ async function carryBook(book, options) {
   try {
     const source = bookSource(manifestPath, manifest, distDir);
     const description = describeEbookEditionSource(source);
-    if (description.type !== "EbookEditionSourceDescription") return rejection(manifest, description.code);
+    if (description.type !== "EbookEditionSourceDescription") return refusal(manifest, description.code);
     const nextSpecification = carriedSpecification(specification, description.editionInputDigest);
     const fabrication = await fabricateEbookEdition(nextSpecification, source);
     if (fabrication.status !== "fabricated-awaiting-acceptance") return { book: manifest.slug, status: "not reproduced", code: fabrication.code ?? "NOT_REPRODUCED" };
     const text = { prior: { epub: epubText(join(stateDir, basename(priorAcceptance.artifacts.epub.path))), pdf: pdfText(join(stateDir, basename(priorAcceptance.artifacts.screenPdf.path))) }, current: { epub: epubText(fabrication.artifacts.epub.path), pdf: pdfText(fabrication.artifacts.screenPdf.path) } };
     const proof = carryEbookEditionProof({ priorProof, priorAcceptance, fabrication, text });
-    if (proof.type !== "EbookEditionProof") return rejection(manifest, proof.code);
+    if (proof.type !== "EbookEditionProof") return refusal(manifest, proof.code);
     return await homeEdition({ manifestPath, manifest, priorAcceptancePath: book.acceptancePath, fabrication, proof, distDir, stagingRoot, options, verb: "carried" });
   } finally { rmSync(stagingRoot, { recursive: true, force: true }); }
 }
@@ -72,7 +72,7 @@ async function carryBook(book, options) {
 export async function homeEdition({ manifestPath, manifest, priorAcceptancePath, fabrication, proof, distDir, stagingRoot, options = {}, verb }) {
   const offeringId = options.stage ? offeringForEdition(options.catalog ? read(options.catalog) : null, manifest.slug, options.offering) : null;
   const acceptance = acceptEbookEdition(fabrication, proof);
-  if (acceptance.status !== "accepted") return rejection(manifest, acceptance.code ?? "NOT_ACCEPTED");
+  if (acceptance.status !== "accepted") return refusal(manifest, acceptance.code ?? "NOT_ACCEPTED");
   const { stateDir, recordsDir, ordinal } = editionHome(manifestPath, manifest, priorAcceptancePath);
   const editionDate = new Date().toISOString().slice(0, 10);
   const records = editionRecordPaths(recordsDir, editionDate, manifest.slug, ordinal);

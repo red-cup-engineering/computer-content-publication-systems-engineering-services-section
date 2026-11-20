@@ -33,20 +33,20 @@ export async function generateBookIllustration(request, { generate = generateIma
   mkdirSync(dirname(imagePath), { recursive: true });
   writeFileSync(imagePath, generated.buffer);
   const generatedAt = now();
-  const origin = buildProvenance({
+  const provenance = buildProvenance({
     provider: generated.provider, model: generated.model, promptUsed, generatedAt,
     sourceWidthPx: generated.sourceWidthPx, targetWidthPx: generated.targetWidthPx,
     upscaled: generated.upscaled, upscaleNote: generated.upscaleNote, outputPath: request.path,
   });
-  const originPath = imagePath.replace(/\.png$/iu, ".provenance.json");
-  writeFileSync(originPath, `${JSON.stringify(origin, null, 2)}\n`, "utf8");
-  const declaration = { path: request.path, alt: request.alt.trim(), role, provenance: { ...origin, sidecar: relative(bookDir, originPath) } };
+  const provenancePath = imagePath.replace(/\.png$/iu, ".provenance.json");
+  writeFileSync(provenancePath, `${JSON.stringify(provenance, null, 2)}\n`, "utf8");
+  const declaration = { path: request.path, alt: request.alt.trim(), role, provenance: { ...provenance, sidecar: relative(bookDir, provenancePath) } };
   const assets = manifest.assets ?? [];
   const existing = assets.findIndex((asset) => asset.path === request.path);
   if (existing === -1) assets.push(declaration); else assets[existing] = declaration;
   manifest.assets = assets;
   writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
-  return { imagePath, provenancePath: originPath, promptUsed, asset: declaration };
+  return { imagePath, provenancePath, promptUsed, asset: declaration };
 }
 
 if (import.meta.main) {
