@@ -3,7 +3,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { buildProvenance, generateImageWithFallback } from "@red-cup-engineering/image-authoring-computer-inference-system-engineering-services-section/image-generation";
+import { buildOrigin, generateImageWithFallback } from "@red-cup-engineering/image-authoring-computer-inference-system-engineering-services-section/image-generation";
 
 function visualStylePrompt(visualStyle) {
   if (visualStyle === undefined) return "";
@@ -33,7 +33,7 @@ export async function generateBookIllustration(request, { generate = generateIma
   mkdirSync(dirname(imagePath), { recursive: true });
   writeFileSync(imagePath, generated.buffer);
   const generatedAt = now();
-  const origin = buildProvenance({
+  const origin = buildOrigin({
     provider: generated.provider, model: generated.model, promptUsed, generatedAt,
     sourceWidthPx: generated.sourceWidthPx, targetWidthPx: generated.targetWidthPx,
     upscaled: generated.upscaled, upscaleNote: generated.upscaleNote, outputPath: request.path,
