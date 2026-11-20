@@ -1,3 +1,4 @@
+import { compareText } from "@red-cup-engineering/semiotic-content-address-system";
 import { createHash } from 'node:crypto';
 import { dirname, extname, posix } from 'node:path';
 import { sha256Hex } from "@red-cup-engineering/cryptographic-computer-data-engineering-services-section/integrity";
@@ -250,7 +251,7 @@ function safePath(value, field) {
 }
 function isRewritable(path, mediaType) { return /\.(?:html?|css|m?js)$/iu.test(path) || /^(?:text\/html|text\/css|application\/(?:java|ecma)script)/iu.test(mediaType ?? ''); }
 function freezeRecord(record) { return Object.freeze({ ...record }); }
-function compareText(left, right) { return left < right ? -1 : left > right ? 1 : 0; }
+
 function diagnostic(code, message, subject) { return Object.freeze({ severity: 'error', code, message, subject }); }
 function failed(code, message) { return emptyResult([diagnostic(code, message, 'input')]); }
 function emptyResult(diagnostics) { return deepFreeze({ artifacts: [], mapping: [], manifest: null, diagnostics }); }
