@@ -1,3 +1,4 @@
+import { makeTemporaryDirectory } from "@red-cup-engineering/computer-file-engineering-services-section/temporary-directory";
 /**
  * @module produce-ebook
  * The effect: validates a manifest, runs pandoc twice (EPUB, PDF via the
@@ -6,8 +7,8 @@
  */
 
 import { execFile as execFileCallback } from "node:child_process";
-import { chmodSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { chmodSync, copyFileSync, mkdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
+
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -109,7 +110,9 @@ async function assertFontFamilyInstalled(fontFamily) {
  * @returns {{path: string, bytes: number, sha256: string, provenance: object}}
  */
 async function renderTypographicCover({ parsed, manifest, style, tokenStyle, tokenFonts, epochSeconds }) {
-  const staging = mkdtempSync(join(tmpdir(), "ebook-cover-"));
+  const temporaryDirectory4 = makeTemporaryDirectory("ebook-cover");
+  try {
+const staging = temporaryDirectory4.path;
   try {
     const tex = join(staging, "cover.tex");
     writeFileSync(tex, renderCoverLatex(readFileSync(COVER_TEMPLATE, "utf8"), {
@@ -128,6 +131,10 @@ async function renderTypographicCover({ parsed, manifest, style, tokenStyle, tok
   } finally {
     rmSync(staging, { recursive: true, force: true });
   }
+
+  } finally {
+    temporaryDirectory4.remove();
+  }
 }
 
 /**
@@ -138,7 +145,9 @@ async function renderTypographicCover({ parsed, manifest, style, tokenStyle, tok
  * @returns {{path: string, bytes: number, sha256: string, provenance: object}}
  */
 async function renderIllustratedCover({ parsed, manifest, tokenStyle, tokenFonts, epochSeconds }) {
-  const staging = mkdtempSync(join(tmpdir(), "ebook-cover-"));
+  const temporaryDirectory3 = makeTemporaryDirectory("ebook-cover");
+  try {
+const staging = temporaryDirectory3.path;
   try {
     const illustration = `illustration${manifest.coverArt.slice(manifest.coverArt.lastIndexOf(".")).toLowerCase()}`;
     copyFileSync(manifest.coverArt, join(staging, illustration));
@@ -156,6 +165,10 @@ async function renderIllustratedCover({ parsed, manifest, tokenStyle, tokenFonts
     return { path, bytes: statSync(path).size, sha256: sha256File(path), provenance: { method: "illustrated", template: sha256File(ILLUSTRATED_COVER_TEMPLATE), tokens: sha256File(parsed.tokens), art: sha256File(manifest.coverArt), ...(manifest.coverArtProvenance ? { artProvenance: manifest.coverArtProvenance } : {}) } };
   } finally {
     rmSync(staging, { recursive: true, force: true });
+  }
+
+  } finally {
+    temporaryDirectory3.remove();
   }
 }
 
@@ -268,7 +281,9 @@ async function finishEpubPackage(epubPath, summary, series, epochSeconds) {
   // The package and the navigation document both live in EPUB/, so a package href is also a nav href.
   const bodymatter = firstBodymatterHref(opf, (href) => documents.get(href) ?? "");
   const entries = [[opfEntry, withEpubAccessibilityMetadata(opf, { ...(summary === undefined ? {} : { summary }), ...(series ? { series } : {}) })], [navEntry, bodymatter ? withBodymatterLandmark(nav, bodymatter) : nav]];
-  const staging = mkdtempSync(join(tmpdir(), "ebook-opf-"));
+  const temporaryDirectory2 = makeTemporaryDirectory("ebook-opf");
+  try {
+const staging = temporaryDirectory2.path;
   try {
     mkdirSync(join(staging, "EPUB"));
     for (const [entry, text] of entries) {
@@ -282,6 +297,10 @@ async function finishEpubPackage(epubPath, summary, series, epochSeconds) {
     await run("zip", ["-X", "-q", resolve(epubPath), ...entries.map(([entry]) => entry)], { cwd: staging, env: { ...process.env, TZ: "UTC" } });
   } finally {
     rmSync(staging, { recursive: true, force: true });
+  }
+
+  } finally {
+    temporaryDirectory2.remove();
   }
 }
 
@@ -445,7 +464,9 @@ export async function prepareBook(manifest) {
  */
 export async function withProjectedChapters(book, fn) {
   const { assets, chapters, tokenStyle, epochSeconds } = book;
-  const staging = mkdtempSync(join(tmpdir(), "ebook-assets-"));
+  const temporaryDirectory = makeTemporaryDirectory("ebook-assets");
+  try {
+const staging = temporaryDirectory.path;
   try {
     const epubAssets = new Map();
     const pdfAssets = new Map();
@@ -464,6 +485,10 @@ export async function withProjectedChapters(book, fn) {
     return await fn({ staging, epubChapters, pdfChapters });
   } finally {
     rmSync(staging, { recursive: true, force: true });
+  }
+
+  } finally {
+    temporaryDirectory.remove();
   }
 }
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { makeTemporaryDirectory } from "@red-cup-engineering/computer-file-engineering-services-section/temporary-directory";
 /**
  * Fabricate a book's paperback: the print interior and the full-wrap cover,
  * preflighted against the printer's rules, and the PrintEditionFabrication
@@ -14,8 +15,8 @@
  * the illustrated front at the trim's scale beside the spine and back.
  */
 import { execFile as execFileCallback } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { copyFileSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -130,7 +131,9 @@ export async function producePrintEdition(manifestPath, acceptancePath) {
   if (manifest.rights === undefined) throw refuse("NO_RIGHTS", "a printed book carries its copyright page; the manifest states no rights");
   const specification = printSpecification(manifest.print);
   const distDir = resolve(dirname(resolve(manifestPath)), manifest.distDir);
-  const scratch = mkdtempSync(join(tmpdir(), "print-edition-"));
+  const temporaryDirectory = makeTemporaryDirectory("print-edition");
+  try {
+const scratch = temporaryDirectory.path;
   try {
     const book = await prepareBook(bookSource(manifestPath, manifest, scratch));
     return await withProjectedChapters(book, async (projected) => {
@@ -169,6 +172,10 @@ export async function producePrintEdition(manifestPath, acceptancePath) {
     });
   } finally {
     rmSync(scratch, { recursive: true, force: true });
+  }
+
+  } finally {
+    temporaryDirectory.remove();
   }
 }
 

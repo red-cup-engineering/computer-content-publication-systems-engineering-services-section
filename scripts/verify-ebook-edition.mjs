@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { makeTemporaryDirectory } from "@red-cup-engineering/computer-file-engineering-services-section/temporary-directory";
 /**
  * Rebuild an accepted edition from its tracked manuscript and report whether
  * the EPUB and PDF come out byte-identical to the ones its acceptance record
@@ -6,8 +7,8 @@
  * editionEpochSeconds); the result says which epoch the rebuild used.
  *   node scripts/verify-ebook-edition.mjs <ebook.json> <acceptance.json>
  */
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { readFileSync, rmSync } from "node:fs";
+
 import { dirname, join, resolve } from "node:path";
 
 import { produceEbook } from "./produce-ebook.mjs";
@@ -21,7 +22,9 @@ export async function verifyEbookEdition(manifestPath, acceptance) {
   if (acceptance?.type !== "EbookEditionAcceptance" || acceptance.status !== "accepted") throw new TypeError("expected an accepted EbookEditionAcceptance");
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
   const here = dirname(resolve(manifestPath));
-  const distDir = mkdtempSync(join(tmpdir(), "ebook-verify-"));
+  const temporaryDirectory = makeTemporaryDirectory("ebook-verify");
+  try {
+const distDir = temporaryDirectory.path;
   try {
     const record = await produceEbook({
       ...manifest,
@@ -41,6 +44,10 @@ export async function verifyEbookEdition(manifestPath, acceptance) {
     };
   } finally {
     rmSync(distDir, { recursive: true, force: true });
+  }
+
+  } finally {
+    temporaryDirectory.remove();
   }
 }
 
