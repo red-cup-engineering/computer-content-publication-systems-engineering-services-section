@@ -1,3 +1,4 @@
+import { makeNiUri } from "@red-cup-engineering/semiotic-content-address-system";
 import { makeTemporaryDirectory } from "@red-cup-engineering/computer-file-engineering-services-section/temporary-directory";
 /**
  * @module produce-ebook
@@ -13,30 +14,7 @@ import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { readMarkdownFrontmatter } from "@red-cup-engineering/markdown-engineering-services-section/read-markdown-frontmatter";
-import {
-  parseManifest,
-  listChapters,
-  collectReferences,
-  resolveStyle,
-  designTokenStyle,
-  latexText,
-  renderCoverLatex,
-  renderIllustratedCoverLatex,
-  coverFileName,
-  illustratedCoverDisclosure,
-  copyrightPageMarkdown,
-  copyrightPageText,
-  bookStylesheet,
-  withEpubAccessibilityMetadata,
-  firstBodymatterHref,
-  withBodymatterLandmark,
-  sha256File,
-  sha256SourceHash,
-  sourceEpochSeconds,
-  editionEpochSeconds,
-  withDeterministicPdfIdentifier,
-  buildRecord,
-} from "@red-cup-engineering/ebook-engineering-services-section";
+import { parseManifest, listChapters, collectReferences, resolveStyle, designTokenStyle, latexText, renderCoverLatex, renderIllustratedCoverLatex, coverFileName, illustratedCoverDisclosure, copyrightPageMarkdown, copyrightPageText, bookStylesheet, withEpubAccessibilityMetadata, firstBodymatterHref, withBodymatterLandmark, sha256SourceHash, sourceEpochSeconds, editionEpochSeconds, withDeterministicPdfIdentifier, buildRecord } from "@red-cup-engineering/ebook-engineering-services-section";
 
 
 const DEFAULT_TEMPLATE = fileURLToPath(import.meta.resolve("@red-cup-engineering/ebook-engineering-services-section/templates/book.latex"));
@@ -127,7 +105,7 @@ const staging = temporaryDirectory4.path;
     await run("xelatex", ["-interaction=nonstopmode", "-halt-on-error", "-output-directory", staging, tex], { env: { ...process.env, SOURCE_DATE_EPOCH: String(epochSeconds) } });
     const path = join(parsed.distDir, coverFileName(parsed));
     await run("pdftoppm", ["-png", "-singlefile", "-scale-to-x", "1600", "-scale-to-y", "2400", join(staging, "cover.pdf"), path.replace(/\.png$/u, "")]);
-    return { path, bytes: statSync(path).size, sha256: sha256File(path), provenance: { method: "typographic", template: sha256File(COVER_TEMPLATE), tokens: sha256File(parsed.tokens), ...(manifest.coverArt ? { art: sha256File(manifest.coverArt) } : {}) } };
+    return { path, bytes: statSync(path).size, sha256: makeNiUri(readFileSync(path)), provenance: { method: "typographic", template: makeNiUri(readFileSync(COVER_TEMPLATE)), tokens: makeNiUri(readFileSync(parsed.tokens)), ...(manifest.coverArt ? { art: makeNiUri(readFileSync(manifest.coverArt)) } : {}) } };
   } finally {
     rmSync(staging, { recursive: true, force: true });
   }
@@ -162,7 +140,7 @@ const staging = temporaryDirectory3.path;
     await run("xelatex", ["-interaction=nonstopmode", "-halt-on-error", "-output-directory", staging, tex], { cwd: staging, env: { ...process.env, SOURCE_DATE_EPOCH: String(epochSeconds) } });
     const path = join(parsed.distDir, coverFileName(parsed));
     await run("pdftoppm", ["-jpeg", "-jpegopt", "quality=95", "-singlefile", "-scale-to-x", "1600", "-scale-to-y", "2560", join(staging, "cover.pdf"), path.replace(/\.jpg$/u, "")]);
-    return { path, bytes: statSync(path).size, sha256: sha256File(path), provenance: { method: "illustrated", template: sha256File(ILLUSTRATED_COVER_TEMPLATE), tokens: sha256File(parsed.tokens), art: sha256File(manifest.coverArt), ...(manifest.coverArtProvenance ? { artProvenance: manifest.coverArtProvenance } : {}) } };
+    return { path, bytes: statSync(path).size, sha256: makeNiUri(readFileSync(path)), provenance: { method: "illustrated", template: makeNiUri(readFileSync(ILLUSTRATED_COVER_TEMPLATE)), tokens: makeNiUri(readFileSync(parsed.tokens)), art: makeNiUri(readFileSync(manifest.coverArt)), ...(manifest.coverArtProvenance ? { artProvenance: manifest.coverArtProvenance } : {}) } };
   } finally {
     rmSync(staging, { recursive: true, force: true });
   }
@@ -401,7 +379,7 @@ export async function prepareBook(manifest) {
   }
 
   const templatePath = parsed.template ?? DEFAULT_TEMPLATE;
-  const templateHash = sha256File(templatePath);
+  const templateHash = makeNiUri(readFileSync(templatePath));
   let cssPath = manifest.css ?? DEFAULT_CSS;
   if (tokenStyle !== null && manifest.css === undefined) {
     cssPath = join(parsed.distDir, `${parsed.slug}.css`);
@@ -414,12 +392,12 @@ export async function prepareBook(manifest) {
     cssPath = join(parsed.distDir, `${parsed.slug}.css`);
     writeFileSync(cssPath, `${stylesheet}\n${COPYRIGHT_PAGE_CSS}`, "utf8");
   }
-  const cssHash = sha256File(cssPath);
+  const cssHash = makeNiUri(readFileSync(cssPath));
   const pandocVersion = await pandocVersionOf(parsed.pandocBin);
   const xelatexVersion = await xelatexVersionOf();
   // The layout filter shapes the PDF as the template does, so the build record's
   // source hash, printed in the colophon, covers it too.
-  const sourceHash = sha256SourceHash(chapters, `${templateHash}+${sha256File(BOOK_LAYOUT_FILTER)}`, cssHash, assets.map((asset) => sha256File(asset.path)));
+  const sourceHash = sha256SourceHash(chapters, `${templateHash}+${makeNiUri(readFileSync(BOOK_LAYOUT_FILTER))}`, cssHash, assets.map((asset) => makeNiUri(readFileSync(asset.path))));
 
   // Deterministic identifier/date instead of pandoc's default random UUID
   // and wall-clock stamp, so an unchanged source set reproduces byte-
@@ -576,7 +554,7 @@ export async function renderBookPdf(book, args, pdfPath) {
   );
   // xdvipdfmx seeds the trailer /ID partly from the output path; derive it from the content instead.
   writeFileSync(pdfPath, withDeterministicPdfIdentifier(readFileSync(pdfPath)));
-  return { path: pdfPath, bytes: statSync(pdfPath).size, sha256: sha256File(pdfPath) };
+  return { path: pdfPath, bytes: statSync(pdfPath).size, sha256: makeNiUri(readFileSync(pdfPath)) };
 }
 
 /**
@@ -641,10 +619,10 @@ export async function produceEbook(manifest) {
     return buildRecord({
       manifest: parsed,
       chapters,
-      epub: { path: epubPath, bytes: statSync(epubPath).size, sha256: sha256File(epubPath) },
+      epub: { path: epubPath, bytes: statSync(epubPath).size, sha256: makeNiUri(readFileSync(epubPath)) },
       pdf,
       cover,
-      assets: assets.map((asset) => ({ ...asset, bytes: statSync(asset.path).size, sha256: sha256File(asset.path) })),
+      assets: assets.map((asset) => ({ ...asset, bytes: statSync(asset.path).size, sha256: makeNiUri(readFileSync(asset.path)) })),
       references,
       pandocVersion: book.pandocVersion,
       xelatexVersion: book.xelatexVersion,
@@ -654,7 +632,7 @@ export async function produceEbook(manifest) {
       style,
       designTokens: tokenStyle === null ? null : {
         path: parsed.tokens,
-        sha256: sha256File(parsed.tokens),
+        sha256: makeNiUri(readFileSync(parsed.tokens)),
         fonts: Object.fromEntries(Object.entries(tokenFonts).map(([role, { family, requested }]) => [role, { family, requested }])),
       },
       epoch: book.epoch,

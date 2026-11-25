@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { makeNiUri } from "@red-cup-engineering/semiotic-content-address-system";
 import { makeTemporaryDirectory } from "@red-cup-engineering/computer-file-engineering-services-section/temporary-directory";
 /**
  * Fabricate a book's paperback: the print interior and the full-wrap cover,
@@ -21,7 +22,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import sharp from "sharp";
-import { renderCoverWrapLatex, sha256File, withDeterministicPdfIdentifier } from "@red-cup-engineering/ebook-engineering-services-section";
+import { renderCoverWrapLatex, withDeterministicPdfIdentifier } from "@red-cup-engineering/ebook-engineering-services-section";
 import { bookSource } from "@red-cup-engineering/ebook-engineering-services-section/fabricate-ebook-edition";
 import { coverWrap, interiorGeometry, preflightPrintEdition, printSpecification, printedIsbn } from "@red-cup-engineering/ebook-engineering-services-section/print-edition";
 import { bookPdfArgs, copyrightPageArgs, copyrightPageOf, italicFaceFileOf, prepareBook, renderBookPdf, withProjectedChapters } from "./produce-ebook.mjs";
@@ -116,7 +117,7 @@ async function renderCover(book, specification, manifest, wrap, coverPath, stagi
   // XeTeX stamps the wall-clock minute into the PDF's Creator unless FORCE_SOURCE_DATE holds it to the build epoch.
   await run("xelatex", ["-interaction=nonstopmode", "-halt-on-error", "-output-directory", staging, tex], { cwd: staging, env: { ...process.env, SOURCE_DATE_EPOCH: String(epochSeconds), FORCE_SOURCE_DATE: "1" } });
   writeFileSync(coverPath, withDeterministicPdfIdentifier(readFileSync(join(staging, "cover.pdf"))));
-  return { path: coverPath, bytes: statSync(coverPath).size, sha256: sha256File(coverPath), art: { sha256: sha256File(parsed.coverArt ?? manifest.coverArt), resampled: { width: pixels, pixelsPerInch: PRINT_PPI, kernel: "lanczos3" } } };
+  return { path: coverPath, bytes: statSync(coverPath).size, sha256: makeNiUri(readFileSync(coverPath)), art: { sha256: makeNiUri(readFileSync(parsed.coverArt ?? manifest.coverArt)), resampled: { width: pixels, pixelsPerInch: PRINT_PPI, kernel: "lanczos3" } } };
 }
 
 /**
@@ -162,9 +163,9 @@ const scratch = temporaryDirectory.path;
         profile: PRINT_PROFILE,
         specification,
         pages: interior.pages,
-        interior: { path: interiorPath, bytes: statSync(interiorPath).size, sha256: sha256File(interiorPath), margins: interior.layout.margins },
+        interior: { path: interiorPath, bytes: statSync(interiorPath).size, sha256: makeNiUri(readFileSync(interiorPath)), margins: interior.layout.margins },
         cover: { path: cover.path, bytes: cover.bytes, sha256: cover.sha256, wrap, art: cover.art },
-        templates: { interior: sha256File(PRINT_TEMPLATE), cover: sha256File(WRAP_TEMPLATE) },
+        templates: { interior: makeNiUri(readFileSync(PRINT_TEMPLATE)), cover: makeNiUri(readFileSync(WRAP_TEMPLATE)) },
         text: { acceptance: resolve(acceptancePath), editionInputDigest: acceptance.editionInputDigest, status: acceptance.status, screenPdfSha256: screen.sha256 },
         preflight,
         fabricatedAt: new Date().toISOString(),

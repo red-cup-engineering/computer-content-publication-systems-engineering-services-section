@@ -1,8 +1,6 @@
-import { compareText } from "@red-cup-engineering/semiotic-content-address-system";
-import { createHash } from 'node:crypto';
+import { compareText, sha256, sha256Hex } from "@red-cup-engineering/semiotic-content-address-system";
 import { dirname, extname, posix } from 'node:path';
-import { sha256Hex } from "@red-cup-engineering/cryptographic-computer-data-engineering-services-section/integrity";
-import { sha256 } from "@red-cup-engineering/cryptographic-computer-data-engineering-services-section/hash";
+import { protocolDigestBase64 } from "@red-cup-engineering/cryptographic-computer-data-engineering-services-section/hash";
 
 const IMMUTABLE = 'public, max-age=31536000, immutable';
 const DEFAULT_EXTENSIONS = Object.freeze(['.css', '.js', '.mjs']);
@@ -57,8 +55,8 @@ export function transformBrowserAssetInventory({ artifacts, config = {} } = {}) 
     }
     const item = Object.freeze({
       source: path, path: target, body, bytes: bytes.byteLength,
-      digest: `sha256-${sha256(bytes).toString("base64")}`,
-      integrity: `sha384-${createHash('sha384').update(bytes).digest('base64')}`,
+      digest: `sha256-${Buffer.from(sha256(bytes)).toString("base64")}`,
+      integrity: `sha384-${protocolDigestBase64("sha384", bytes)}`,
     });
     mapping.set(path, item);
     return item;

@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { sha256Hex } from "@red-cup-engineering/semiotic-content-address-system";
 
 const DEFAULT_MANIFEST_PATH = "manifest.webmanifest";
 const DEFAULT_WORKER_PATH = "service-worker.js";
@@ -137,21 +137,11 @@ function manifestObject(config, diagnostics) {
 }
 
 function digestInventory(entries, manifestBody, urls, options) {
-  const hash = createHash("sha256");
-  hash.update(manifestBody);
-  hash.update("\0");
-  for (const url of urls) {
-    hash.update(url);
-    hash.update("\0");
-  }
-  for (const [path, body] of entries) {
-    hash.update(path);
-    hash.update("\0");
-    hash.update(body);
-    hash.update("\0");
-  }
-  hash.update(JSON.stringify(options));
-  return hash.digest("hex");
+  const parts = [manifestBody, "\0"];
+  for (const url of urls) parts.push(url, "\0");
+  for (const [path, body] of entries) parts.push(path, "\0", body, "\0");
+  parts.push(JSON.stringify(options));
+  return sha256Hex(Buffer.concat(parts.map(part => Buffer.from(part))));
 }
 
 function serviceWorkerSource({ cacheName, cachePrefix, precacheUrls, offlineFallback, runtimeCaching, skipWaiting, claimClients, offlineResponse }) {
