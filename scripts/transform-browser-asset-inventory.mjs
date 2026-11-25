@@ -27,7 +27,7 @@ export function transformBrowserAssetInventory({ artifacts, config = {} } = {}) 
   const mapping = new Map();
   const visiting = [];
 
-  function fingerprint(path) {
+  function mapToFingerprintedPath(path) {
     if (mapping.has(path)) return mapping.get(path);
     const cycleAt = visiting.indexOf(path);
     if (cycleAt !== -1) {
@@ -39,7 +39,7 @@ export function transformBrowserAssetInventory({ artifacts, config = {} } = {}) 
     let body = record.body;
     if (typeof body === 'string') {
       const dependencies = referencedSelectedPaths(path, body, selected);
-      for (const dependency of dependencies) fingerprint(dependency);
+      for (const dependency of dependencies) mapToFingerprintedPath(dependency);
       if (diagnostics.length === 0) body = rewriteText(path, body, mapping, { integrity: false });
     } else if (/\.(?:css|m?js)$/iu.test(path)) {
       diagnostics.push(diagnostic('BAI-005', 'selected JS/CSS asset must have a text body', path));
@@ -62,7 +62,7 @@ export function transformBrowserAssetInventory({ artifacts, config = {} } = {}) 
     return item;
   }
 
-  for (const path of [...selected].sort(compareText)) fingerprint(path);
+  for (const path of [...selected].sort(compareText)) mapToFingerprintedPath(path);
   if (diagnostics.length > 0) return emptyResult(diagnostics);
 
   const output = new Map();
